@@ -28,12 +28,11 @@ func main() {
 
 	// Main Content: Song info and album art
 	currentSong := widget.NewLabel("Currently Playing: None")
-	albumArt := canvas.NewImageFromFile("./assets/music-image-bg.jpg") 
+	albumArt := canvas.NewImageFromFile("./assets/music-image-bg.jpg") // Ensure this path is correct
 	albumArt.FillMode = canvas.ImageFillContain // Keeping aspect ratio
 
 	// Create a container for album art and current song
 	mainContent := container.NewVBox(currentSong, albumArt)
-	mainContent.SetMinSize(fyne.NewSize(300, 300)) // Set minimum size for better aesthetics
 
 	// Bottom Controls: Media buttons
 	playBtn := widget.NewButton("Play", func() {
