@@ -1,17 +1,15 @@
 package main
 
 import (
-	// "fmt"
-	// "os"
+	"fmt"
+	"image/color"
+	"time"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
-	// "github.com/faiface/beep"
-	// "github.com/faiface/beep/mp3"
-	// "github.com/hajimehoshi/oto/v2"
 )
 
 func main() {
@@ -30,33 +28,57 @@ func main() {
 
 	// Main Content: Song info and album art
 	currentSong := widget.NewLabel("Currently Playing: None")
-	albumArt := canvas.NewImageFromFile("path/to/album_art.png") // Replace with your image path
-	albumArt.FillMode = canvas.ImageFillContain // Keep aspect ratio
+	albumArt := canvas.NewImageFromFile("./assets/music-image-bg.jpg") 
+	albumArt.FillMode = canvas.ImageFillContain // Keeping aspect ratio
 
+	// Create a container for album art and current song
 	mainContent := container.NewVBox(currentSong, albumArt)
+	mainContent.SetMinSize(fyne.NewSize(300, 300)) // Set minimum size for better aesthetics
 
 	// Bottom Controls: Media buttons
 	playBtn := widget.NewButton("Play", func() {
 		// Logic to play music will go here
+		fmt.Println("Play button clicked")
 	})
 	pauseBtn := widget.NewButton("Pause", func() {
 		// Logic to pause music will go here
+		fmt.Println("Pause button clicked")
 	})
 	stopBtn := widget.NewButton("Stop", func() {
 		// Logic to stop music will go here
+		fmt.Println("Stop button clicked")
 	})
 
-	bottomControls := container.NewHBox(playBtn, pauseBtn, stopBtn)
+	// Current song details
+	currentSongName := canvas.NewText("Current Track: tachBeat 1", color.White)
+	currentSongName.TextStyle = fyne.TextStyle{Bold: true} // Making it bold for emphasis
+
+	// Progress bar
+	progressBar := widget.NewProgressBar()
+	progressBar.Min = 0
+	progressBar.Max = 100
+
+	// Simulate progress for demonstration purposes
+	go func() {
+		for i := 0.0; i <= 1.0; i += 0.1 {
+			time.Sleep(time.Millisecond * 250)
+			progressBar.SetValue(i)
+		}
+	}()
+
+	// Create a container for the bottom controls
+	bottomControls := container.NewHBox(currentSongName, playBtn, pauseBtn, stopBtn, progressBar)
+	bottomControls.Resize(fyne.NewSize(800, 50)) // Setting a fixed height for the control bar
 
 	// Combine Layout: Sidebar and Main Content
 	splitLayout := container.NewHSplit(sidebar, mainContent)
-	splitLayout.SetOffset(0.25) // Adjust sidebar width
+	splitLayout.SetOffset(0.25) // Adjusting sidebar width
 
 	// Final Layout: Main content with bottom controls
 	mainLayout := container.NewBorder(nil, bottomControls, nil, nil, splitLayout)
 
 	// Set window content and run the app
 	myWindow.SetContent(mainLayout)
-	myWindow.Resize(fyne.NewSize(800, 600)) // Adjust window size
+	myWindow.Resize(fyne.NewSize(800, 400)) // Adjusting the window size
 	myWindow.ShowAndRun()
 }
